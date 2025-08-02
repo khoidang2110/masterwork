@@ -1,7 +1,0 @@
-1.link github: https://github.com/khoidang2110/masterwork.git
-2.link youtube: https://youtu.be/_ar4jP1saE8
-3.link vercel: https://masterwork-pied.vercel.app/index.html
-
-BC34: Ð?ng Công Khôi
-bài t?p capstone: masterwork
-các trang làm: index, about, services
