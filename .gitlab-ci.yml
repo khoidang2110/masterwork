@@ -1,0 +1,46 @@
+deploy-to-vps2:
+  stage: deploy
+  only:
+    - main
+  tags:
+    - gitlabvps2
+  script:
+    - echo "🔐 Cấu hình SSH"
+    - apt-get update -y && apt-get install -y openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$gitlabvps2" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p 22 14.225.220.181 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+    - echo "🚀 Triển khai ứng dụng..."
+    - ssh -o StrictHostKeyChecking=no root@14.225.220.181 "
+        echo '📁 Kiểm tra folder project' &&
+        if [ ! -d /home/root/masterworkgitlab ]; then
+          echo '📥 Chưa có project => clone' &&
+          git clone http://john2110.ddns.net:8003/john/masterworkgitlab /home/root/masterworkgitlab;
+        fi &&
+
+        echo '📂 Di chuyển vào project' &&
+        cd /home/root/masterworkgitlab &&
+
+        echo '🔀 Checkout main và thiết lập tracking (nếu cần)' &&
+        git checkout main || git checkout -b main origin/main &&
+        git branch --set-upstream-to=origin/main main &&
+
+        echo '🔄 Pull cập nhật' &&
+        git reset --hard &&
+        git pull &&
+
+        echo '🛑 Dừng container cũ (nếu có)' &&
+        docker-compose down || echo '[WARNING] Không có container cũ' &&
+
+        echo '🔄 Build và khởi động lại container' &&
+        docker-compose up -d --build &&
+
+        echo '🧹 Dọn dẹp image không dùng' &&
+        docker image prune -f &&
+
+        echo '✅ Deploy thành công!'
+      "
