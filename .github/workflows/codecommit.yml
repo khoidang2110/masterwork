@@ -22,7 +22,7 @@ jobs:
 
       - name: Set CodeCommit remote URL
         run: |
-          CODECOMMIT_URL="https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/my-static-site"
+          CODECOMMIT_URL="https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/masterwork"
           git remote add codecommit "$CODECOMMIT_URL" || git remote set-url codecommit "$CODECOMMIT_URL"
 
       - name: Set Git identity
