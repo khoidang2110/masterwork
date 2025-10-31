@@ -22,8 +22,10 @@ jobs:
 
       - name: Set CodeCommit remote URL
         run: |
-          CODECOMMIT_URL="https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/masterwork"
-          git remote add codecommit "$CODECOMMIT_URL" || git remote set-url codecommit "$CODECOMMIT_URL"
+          # cú pháp: codecommit://<region>/v1/repos/<repo-name>
+          git remote add codecommit codecommit://ap-southeast-2/v1/repos/masterwork \
+            || git remote set-url codecommit codecommit://ap-southeast-2/v1/repos/masterwork
+          git remote -v
 
       - name: Set Git identity
         run: |
